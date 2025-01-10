@@ -291,7 +291,7 @@ async def show_users(client, message: Message):
         await message.reply_text("ℹ️ No users found in the subscription data.")
 
 # 3. /myplan
-@bot.on_message(filters.command("myplan") & filters.private)
+#bot.on_message(filters.command("myplan") & filters.private)
 async def my_plan(client, message: Message):
     user_id = str(message.from_user.id)
     subscription_data = read_subscription_data()  # Make sure this function is implemented elsewhere
