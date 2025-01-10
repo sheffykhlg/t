@@ -178,7 +178,6 @@ async def cookies_handler(client: Client, m: Message):
 
 
 # File paths
-SUBSCRIPTION_FILE = "subscription_data.txt"
 CHANNELS_FILE = "channels_data.json"
 
 # Admin ID
@@ -216,7 +215,7 @@ def write_channels_data(data):
 # Admin-only decorator
 def admin_only(func):
     async def wrapper(client, message: Message):
-        if message.from_user.id != YOUR_ADMIN_ID:
+        if message.from_user.id != 6428531614:
             await message.reply_text("You are not authorized to use this command.")
             return
         await func(client, message)
@@ -269,12 +268,12 @@ YOUR_ADMIN_ID = 6428531614
 
 # Helper function to check admin privilege
 def is_admin(user_id):
-    return user_id == YOUR_ADMIN_ID
+    return user_id == 6428531614
 
 # Command to show all users (Admin only)
 @bot.on_message(filters.command("users") & filters.private)
 async def show_users(client, message: Message):
-    user_id = message.from_user.id
+    user_id = 6428531614
 
     if not is_admin(user_id):
         await message.reply_text("❌ You are not authorized to use this command.")
@@ -296,8 +295,8 @@ async def my_plan(client, message: Message):
     user_id = str(message.from_user.id)
     subscription_data = read_subscription_data()  # Make sure this function is implemented elsewhere
 
-    # Define YOUR_ADMIN_ID somewhere in your code
-    if user_id == str(YOUR_ADMIN_ID):  # YOUR_ADMIN_ID should be an integer
+    # Define 6428531614 somewhere in your code
+    if user_id == str(6428531614):  # YOUR_ADMIN_ID should be an integer
         await message.reply_text("**✨ You have permanent access!**")
     elif any(user[0] == user_id for user in subscription_data):  # Assuming subscription_data is a list of [user_id, expiration_date]
         expiration_date = next(user[1] for user in subscription_data if user[0] == user_id)
@@ -359,7 +358,7 @@ YOUR_ADMIN_ID = 6428531614
 
 # Helper function to check admin privilege
 def is_admin(user_id):
-    return user_id == YOUR_ADMIN_ID
+    return user_id == 6428531614
 
 # Command to show all allowed channels (Admin only)
 @bot.on_message(filters.command("allowed_channels"))
