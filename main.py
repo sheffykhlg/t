@@ -10,7 +10,6 @@ import subprocess
 import urllib.parse
 import yt_dlp
 import cloudscraper
-import datetime
 
 from yt_dlp import YoutubeDL
 import yt_dlp as youtube_dl
@@ -18,7 +17,6 @@ from core import download_and_send_video
 import core as helper
 from utils import progress_bar
 from vars import API_ID, API_HASH, BOT_TOKEN
-from aiohttp import ClientSession
 from pyromod import listen
 from subprocess import getstatusoutput
 from pytube import YouTube
@@ -178,18 +176,10 @@ async def cookies_handler(client: Client, m: Message):
 
 
 # File paths
-SUBSCRIPTION_FILE = "subscription_data.txt"
 CHANNELS_FILE = "channels_data.json"
 
 # Admin ID
 YOUR_ADMIN_ID = 6428531614
-
-# Function to read subscription data
-def read_subscription_data():
-    if not os.path.exists(SUBSCRIPTION_FILE):
-        return []
-    with open(SUBSCRIPTION_FILE, "r") as f:
-        return [line.strip().split(",") for line in f.readlines()]
 
 
 # Function to read channels data
@@ -198,13 +188,6 @@ def read_channels_data():
         return []
     with open(CHANNELS_FILE, "r") as f:
         return json.load(f)
-
-
-# Function to write subscription data
-def write_subscription_data(data):
-    with open(SUBSCRIPTION_FILE, "w") as f:
-        for user in data:
-            f.write(",".join(user) + "\n")
 
 
 # Function to write channels data
@@ -216,14 +199,14 @@ def write_channels_data(data):
 # Admin-only decorator
 def admin_only(func):
     async def wrapper(client, message: Message):
-        if message.from_user.id != YOUR_ADMIN_ID:
+        if message.from_user.id != 6428531614:
             await message.reply_text("You are not authorized to use this command.")
             return
         await func(client, message)
     return wrapper
 
 # How to use:-
-@bot.on_message(filters.command("guide"))
+# bot.on_message(filters.command("guide"))
 async def guide_handler(client: Client, message: Message):
     guide_text = (
         "🔑 **How to get started with Premium**:\n\n"
@@ -239,17 +222,13 @@ async def guide_handler(client: Client, message: Message):
     await message.reply_text(guide_text)
 
 # 1. /adduser
-@bot.on_message(filters.command("adduser") & filters.private)
-@admin_only
+# bot.on_message(filters.command("adduser") & filters.private)
 async def add_user(client, message: Message):
     try:
-        _, user_id, expiration_date = message.text.split()
-        subscription_data = read_subscription_data()
-        subscription_data.append([user_id, expiration_date])
-        write_subscription_data(subscription_data)
-        await message.reply_text(f"User {user_id} added with expiration date {expiration_date}.")
+        _, 6428531614, expiration_date = message.text.split()
+        await message.reply_text(f"User {6428531614} added with expiration date {expiration_date}.")
     except ValueError:
-        await message.reply_text("Invalid command format. Use: /adduser <user_id> <expiration_date>")
+        await message.reply_text("Invalid command format. Use: /adduser <6428531614> <expiration_date>")
 
 
 # 2. /removeuser
@@ -268,56 +247,37 @@ async def remove_user(client, message: Message):
 YOUR_ADMIN_ID = 6428531614
 
 # Helper function to check admin privilege
-def is_admin(user_id):
-    return user_id == YOUR_ADMIN_ID
+def is_admin(6428531614):
+    return user_id == 6428531614
 
 # Command to show all users (Admin only)
 @bot.on_message(filters.command("users") & filters.private)
 async def show_users(client, message: Message):
-    user_id = message.from_user.id
+    user_id = 6428531614
 
     if not is_admin(user_id):
         await message.reply_text("❌ You are not authorized to use this command.")
         return
-
-    subscription_data = read_subscription_data()
     
-    if subscription_data:
-        users_list = "\n".join(
-            [f"{idx + 1}. User ID: `{user[0]}`, Expiration Date: `{user[1]}`" for idx, user in enumerate(subscription_data)]
-        )
-        await message.reply_text(f"**👥 Current Subscribed Users:**\n\n{users_list}")
-    else:
-        await message.reply_text("ℹ️ No users found in the subscription data.")
-
-# 3. /myplan
 # bot.on_message(filters.command("myplan") & filters.private)
 async def my_plan(client, message: Message):
     user_id = str(message.from_user.id)
-    subscription_data = read_subscription_data()  # Make sure this function is implemented elsewhere
 
-    # Define YOUR_ADMIN_ID somewhere in your code
-    if user_id == str(YOUR_ADMIN_ID):  # YOUR_ADMIN_ID should be an integer
+    if user_id == str(6428531614):  # YOUR_ADMIN_ID should be an integer
         await message.reply_text("**✨ You have permanent access!**")
     elif any(user[0] == user_id for user in subscription_data):  # Assuming subscription_data is a list of [user_id, expiration_date]
         expiration_date = next(user[1] for user in subscription_data if user[0] == user_id)
         await message.reply_text(
             f"**📅 Your Premium Plan Status**\n\n"
-            f"**🆔 User ID**: `{user_id}`\n"
+            f"**🆔 User ID**: `{6428531614}`\n"
             f"**⏳ Expiration Date**: `{expiration_date}`\n"
             f"**🔒 Status**: *Active*"
-        )
-    else:
-        await message.reply_text("**❌ You are not a premium user.**")
 
 # 4. /add_channel
-@bot.on_message(filters.command("add_channel"))
+# bot.on_message(filters.command("add_channel"))
 async def add_channel(client, message: Message):
     user_id = str(message.from_user.id)
-    subscription_data = read_subscription_data()
 
-    if not any(user[0] == user_id for user in subscription_data):
-        await message.reply_text("You are not a premium user.")
         return
 
     try:
@@ -358,8 +318,8 @@ async def remove_channel(client, message: Message):
 YOUR_ADMIN_ID = 6428531614
 
 # Helper function to check admin privilege
-def is_admin(user_id):
-    return user_id == YOUR_ADMIN_ID
+def is_admin(6428531614):
+    return user_id == 6428531614
 
 # Command to show all allowed channels (Admin only)
 @bot.on_message(filters.command("allowed_channels"))
@@ -413,14 +373,7 @@ async def stop_handler(client, message: Message):
 async def moni_handler(client: Client, m: Message):
     if m.chat.type == "private":
         user_id = str(m.from_user.id)
-        subscription_data = read_subscription_data()
-        if not any(user[0] == user_id for user in subscription_data):
-            await m.reply_text("❌ You are not a premium user. Please upgrade your subscription! 💎")
-            return
-    else:
-        channels = read_channels_data()
-        if str(m.chat.id) not in channels:
-            await m.reply_text("❗ You are not a premium user. Subscribe now for exclusive access! 🚀")
+            
             return
             
     editable = await m.reply_text('𝐓𝐨 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐀 𝐓𝐱𝐭 𝐅𝐢𝐥𝐞 𝐒𝐞𝐧𝐝 𝐇𝐞𝐫𝐞 ⏍')
