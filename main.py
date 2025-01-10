@@ -183,13 +183,6 @@ CHANNELS_FILE = "channels_data.json"
 # Admin ID
 YOUR_ADMIN_ID = 6428531614
 
-# Function to read subscription data
-def read_subscription_data():
-    if not os.path.exists(SUBSCRIPTION_FILE):
-        return []
-    with open(SUBSCRIPTION_FILE, "r") as f:
-        return [line.strip().split(",") for line in f.readlines()]
-
 
 # Function to read channels data
 def read_channels_data():
@@ -197,13 +190,6 @@ def read_channels_data():
         return []
     with open(CHANNELS_FILE, "r") as f:
         return json.load(f)
-
-
-# Function to write subscription data
-def write_subscription_data(data):
-    with open(SUBSCRIPTION_FILE, "w") as f:
-        for user in data:
-            f.write(",".join(user) + "\n")
 
 
 # Function to write channels data
@@ -222,7 +208,7 @@ def admin_only(func):
     return wrapper
 
 # How to use:-
-@bot.on_message(filters.command("guide"))
+# bot.on_message(filters.command("guide"))
 async def guide_handler(client: Client, message: Message):
     guide_text = (
         "🔑 **How to get started with Premium**:\n\n"
@@ -238,14 +224,10 @@ async def guide_handler(client: Client, message: Message):
     await message.reply_text(guide_text)
 
 # 1. /adduser
-@bot.on_message(filters.command("adduser") & filters.private)
-@admin_only
+# bot.on_message(filters.command("adduser") & filters.private)
 async def add_user(client, message: Message):
     try:
         _, user_id, expiration_date = message.text.split()
-        subscription_data = read_subscription_data()
-        subscription_data.append([user_id, expiration_date])
-        write_subscription_data(subscription_data)
         await message.reply_text(f"User {user_id} added with expiration date {expiration_date}.")
     except ValueError:
         await message.reply_text("Invalid command format. Use: /adduser <user_id> <expiration_date>")
@@ -281,15 +263,6 @@ async def show_users(client, message: Message):
 
     subscription_data = read_subscription_data()
     
-    if subscription_data:
-        users_list = "\n".join(
-            [f"{idx + 1}. User ID: `{user[0]}`, Expiration Date: `{user[1]}`" for idx, user in enumerate(subscription_data)]
-        )
-        await message.reply_text(f"**👥 Current Subscribed Users:**\n\n{users_list}")
-    else:
-        await message.reply_text("ℹ️ No users found in the subscription data.")
-
-# 3. /myplan
 # bot.on_message(filters.command("myplan") & filters.private)
 async def my_plan(client, message: Message):
     user_id = str(message.from_user.id)
@@ -310,7 +283,7 @@ async def my_plan(client, message: Message):
         await message.reply_text("**❌ You are not a premium user.**")
 
 # 4. /add_channel
-@bot.on_message(filters.command("add_channel"))
+# bot.on_message(filters.command("add_channel"))
 async def add_channel(client, message: Message):
     user_id = str(message.from_user.id)
     subscription_data = read_subscription_data()
